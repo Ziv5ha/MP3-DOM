@@ -1,1 +1,51 @@
 /* Your code here */
+body{
+    background-color: rgb(223, 221, 221);
+}
+#songs, #playlists{
+    color: #e3ebe6;
+    background-color: #16151a;
+    width: 65vw;
+    margin-left: 200px;
+    margin-top: 100px;
+    border-radius: 20px;
+    padding-top: 50px;
+    padding-bottom: 100px;
+    padding-left: 50px;
+    font-size: 23px;
+    font-family: Garamond  ;
+    font-weight: lighter;
+    letter-spacing: 1.5px;
+}
+.songs, .playlists{
+    padding-top: 40px;
+    padding-bottom: 20px;
+    padding-left: 40px;
+    width: 60vw;
+    margin-top: 20px;
+    border: 3px;
+    border-radius: 7px;
+    border-style: groove;
+    border-color: aqua;
+}
+.songs img{
+    display: block;
+    margin-top: -125px;
+    height: 150px;
+}
+.songs div{
+    display: block;
+    /* margin-top: -25.5px; */
+    margin-left: 200px;
+}
+.playing{
+    display: block;
+    position: fixed;
+    background-color: gray;
+    border-color: brown;
+    border-radius: 10px;
+}
+.playlists{
+
+    border-color: rgb(182, 20, 20);
+}
