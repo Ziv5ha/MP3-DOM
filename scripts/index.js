@@ -4,9 +4,19 @@
  *
  * @param {String} songId - the ID of the song to play
  */
-function playSong(songId) {
-    let nowPlaying = document.createElement("div")
+const identifySong = (id) => {                                  //identify a song in the player and returns all the information about it
+    for (let i of player.songs) if (i.id === id) return i
 }
+function playSong(songId) {
+    if (document.getElementsByClassName("nowPlaying").length!==0){
+        const previuslyPlayed = document.getElementsByClassName("nowPlaying")
+        previuslyPlayed[0].classList.remove("nowPlaying")
+    }
+    const song = document.getElementById(`${songId}`)
+    song.classList.add("nowPlaying")
+    return song
+}
+    
 /**
  * Creates a song DOM element based on a song object.
  */
@@ -26,7 +36,7 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
     const coverArtPic = coverArt
     const children = [title, album, artist,durationFormat(duration)]
     const classes = ["songs"]
-    const attrs = { onclick: `playSong(${id})` }
+    const attrs = { id ,onclick: `playSong(${id})` }
     return createElement("div", children, classes, attrs, coverArtPic)
 }
 
@@ -34,11 +44,6 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
 /**
  * Creates a playlist DOM element based on a playlist object.
  */
- const identifySong = (id) => {                                  //identify a song in the player and returns all the information about it
-    let song = {}
-    for (let i of player.songs) if (i.id === id) {song = {id,title,album,artist,duration} = i}
-    return song
-}
  const playlistDuration = (playlisySongs) => {
     let time=0
     for (let song of playlisySongs){
@@ -98,3 +103,4 @@ for (let pl of player.playlists){
     const playlist = createPlaylistElement(pl)
     playlistElement.appendChild(playlist)
 }
+console.log(document.getElementsByClassName("nowPlaying").length)

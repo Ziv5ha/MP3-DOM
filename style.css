@@ -23,7 +23,7 @@ body{
     padding-left: 40px;
     width: 60vw;
     margin-top: 20px;
-    border: 3px;
+    border-width: 3px;
     border-radius: 7px;
     border-style: groove;
     border-color: aqua;
@@ -38,14 +38,15 @@ body{
     /* margin-top: -25.5px; */
     margin-left: 200px;
 }
-.playing{
-    display: block;
-    position: fixed;
-    background-color: gray;
-    border-color: brown;
-    border-radius: 10px;
-}
+
 .playlists{
 
     border-color: rgb(182, 20, 20);
+}
+.nowPlaying{
+    background-color: gray;
+    border-width: 8px;
+    border-color: rgb(28, 156, 45);
+    border-radius: 10px;
+    
 }
