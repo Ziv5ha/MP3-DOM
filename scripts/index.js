@@ -5,7 +5,7 @@
  * @param {String} songId - the ID of the song to play
  */
 function playSong(songId) {
-    // Your code here
+    let nowPlaying = document.createElement("div")
 }
 /**
  * Creates a song DOM element based on a song object.
@@ -20,7 +20,7 @@ function playSong(songId) {
     if ((duration%60)>=1 && (duration%60)<10) sec = `0${duration%60}`
     if ((duration%60)==0) sec = `00`
     return min+":"+sec
-    }
+}
 
 function createSongElement({ id, title, album, artist, duration, coverArt }) {
     const coverArtPic = coverArt
@@ -30,21 +30,27 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
     return createElement("div", children, classes, attrs, coverArtPic)
 }
 
-let test = document.createElement("div")
-test.innerText = "this is a test"
-
-const songs = document.getElementById("songs")
-songs.appendChild(test)
-test.class = "songs"
-// createElement
 
 /**
  * Creates a playlist DOM element based on a playlist object.
  */
+ const identifySong = (id) => {                                  //identify a song in the player and returns all the information about it
+    let song = {}
+    for (let i of player.songs) if (i.id === id) {song = {id,title,album,artist,duration} = i}
+    return song
+}
+ const playlistDuration = (playlisySongs) => {
+    let time=0
+    for (let song of playlisySongs){
+      time += identifySong(song).duration
+    }
+    return time
+}
+
 function createPlaylistElement({ id, name, songs }) {
-    const children = []
-    const classes = []
-    const attrs = {}
+    const children = [name, `${songs.length} songs`, durationFormat(playlistDuration(songs))]
+    const classes = ["playlists"] 
+    const attrs = {id}
     return createElement("div", children, classes, attrs)
 }
 
@@ -86,4 +92,9 @@ for (let s of player.songs){
     const songsElement = document.getElementById("songs")
     const song = createSongElement(s)
     songsElement.appendChild(song)
+}
+for (let pl of player.playlists){
+    const playlistElement = document.getElementById("playlists")
+    const playlist = createPlaylistElement(pl)
+    playlistElement.appendChild(playlist)
 }
