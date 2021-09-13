@@ -4,9 +4,31 @@
  *
  * @param {String} songId - the ID of the song to play
  */
+
+//     ----- Subfunctions -----     //
 const identifySong = (id) => {                                  //identify a song in the player and returns all the information about it
     for (let i of player.songs) if (i.id === id) return i
 }
+const durationFormat = (duration) => {                          //convert from duration in seconds to "mm:ss" string
+    let min = ""
+    if (Math.floor(duration/60)>=10) min = `${Math.floor(duration/60)}`
+    if (Math.floor(duration/60)>=1 && Math.floor(duration/60)<10) min = `0${Math.floor(duration/60)}`
+    if (Math.floor(duration/60)==0) min = "00"
+    let sec = ""
+    if ((duration%60)>=10) sec = `${duration%60}`
+    if ((duration%60)>=1 && (duration%60)<10) sec = `0${duration%60}`
+    if ((duration%60)==0) sec = `00`
+    return min+":"+sec
+}
+const playlistDuration = (playlisySongs) => {                   //calculates playlist duration
+    let time=0
+    for (let song of playlisySongs){
+      time += identifySong(song).duration
+    }
+    return time
+}
+
+
 function playSong(songId) {
     if (document.getElementsByClassName("nowPlaying").length!==0){
         const previuslyPlayed = document.getElementsByClassName("nowPlaying")
@@ -20,37 +42,21 @@ function playSong(songId) {
 /**
  * Creates a song DOM element based on a song object.
  */
- const durationFormat = (duration) => {                          //Subfunction to convert from duration in seconds to "mm:ss" string
-    let min = ""
-    if (Math.floor(duration/60)>=10) min = `${Math.floor(duration/60)}`
-    if (Math.floor(duration/60)>=1 && Math.floor(duration/60)<10) min = `0${Math.floor(duration/60)}`
-    if (Math.floor(duration/60)==0) min = "00"
-    let sec = ""
-    if ((duration%60)>=10) sec = `${duration%60}`
-    if ((duration%60)>=1 && (duration%60)<10) sec = `0${duration%60}`
-    if ((duration%60)==0) sec = `00`
-    return min+":"+sec
-}
+ 
 
 function createSongElement({ id, title, album, artist, duration, coverArt }) {
-    const coverArtPic = coverArt
-    const children = [title, album, artist,durationFormat(duration)]
+    const imgEl = createElement("img", [] ,["album-art"], {src: coverArt});
+    const children = [title, album, artist,durationFormat(duration), imgEl]
     const classes = ["songs"]
     const attrs = { id ,onclick: `playSong(${id})` }
-    return createElement("div", children, classes, attrs, coverArtPic)
+    return createElement("div", children, classes, attrs,)
 }
 
 
 /**
  * Creates a playlist DOM element based on a playlist object.
  */
- const playlistDuration = (playlisySongs) => {
-    let time=0
-    for (let song of playlisySongs){
-      time += identifySong(song).duration
-    }
-    return time
-}
+ 
 
 function createPlaylistElement({ id, name, songs }) {
     const children = [name, `${songs.length} songs`, durationFormat(playlistDuration(songs))]
@@ -80,14 +86,11 @@ function createElement(tagName, children = [], classes = [], attributes = {}, co
         newElement.classList.add(`${c}`)
     }
     for (let child of children){
-        const newChild = document.createElement(tagName)
-        newChild.textContent = `${child}`
-        newElement.appendChild(newChild)
-    }
-    if (coverArtPic.length>0){
-        const coverArt = document.createElement("img")
-        coverArt.setAttribute("src", `${coverArtPic}`)
-        newElement.appendChild(coverArt)
+        if (typeof child === "string"){
+            const child = document.createElement(tagName)
+            child.textContent = `${child}`
+        }
+        newElement.appendChild(child)
     }
     return newElement
 }
@@ -103,4 +106,3 @@ for (let pl of player.playlists){
     const playlist = createPlaylistElement(pl)
     playlistElement.appendChild(playlist)
 }
-console.log(document.getElementsByClassName("nowPlaying").length)
