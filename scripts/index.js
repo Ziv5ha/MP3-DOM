@@ -80,9 +80,9 @@ function playSong(songId) {
     addQueueToDOM(createQueueFromSong(songId))
     playing(songId)
     queue.shift()
-    setTimeout(()=>{playNext(createQueueFromSong(songId))}, dentifySong(songId).duration*1000)
+    setTimeout(()=>{playNext(createQueueFromSong(songId))}, identifySong(songId).duration*1000)
     if (queue.length>=1){
-        setTimeout(()=>{playSong(queue[0])}, dentifySong(songId).duration*1000)
+        setTimeout(()=>{playSong(queue[0])}, identifySong(songId).duration*1000)
     }
 }
     
