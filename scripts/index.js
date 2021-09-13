@@ -27,6 +27,10 @@ const playlistDuration = (playlisySongs) => {                   //calculates pla
     }
     return time
 }
+const stopPlaying = (songId) => {
+    const song = document.getElementById(`${songId}`)
+    song.classList.remove("nowPlaying")
+}
 
 
 function playSong(songId) {
@@ -36,6 +40,7 @@ function playSong(songId) {
     }
     const song = document.getElementById(`${songId}`)
     song.classList.add("nowPlaying")
+    setTimeout(()=>{stopPlaying(song.id)}, identifySong(songId).duration*1000)
     return song
 }
     
@@ -77,20 +82,22 @@ function createPlaylistElement({ id, name, songs }) {
  * @param {Array} classes - the class list of the new element
  * @param {Object} attributes - the attributes for the new element
  */
-function createElement(tagName, children = [], classes = [], attributes = {}, coverArtPic = "") {
+function createElement(tagName, children = [], classes = [], attributes = {}) {
     let newElement = document.createElement(tagName)
-    for (let [att, value] of Object.entries(attributes)){
-        newElement.setAttribute(`${att}`, `${value}`)
+    for (let child of children){
+        if (typeof child === "string"){
+            const childtext = child
+            child = document.createElement(tagName)
+            child.textContent = `${childtext}`
+  
+        }
+        newElement.appendChild(child)
     }
     for (let c of classes){
         newElement.classList.add(`${c}`)
     }
-    for (let child of children){
-        if (typeof child === "string"){
-            const child = document.createElement(tagName)
-            child.textContent = `${child}`
-        }
-        newElement.appendChild(child)
+    for (let [att, value] of Object.entries(attributes)){
+        newElement.setAttribute(`${att}`, `${value}`)
     }
     return newElement
 }
