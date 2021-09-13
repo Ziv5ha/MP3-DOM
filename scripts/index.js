@@ -30,18 +30,60 @@ const playlistDuration = (playlisySongs) => {                   //calculates pla
 const stopPlaying = (songId) => {
     const song = document.getElementById(`${songId}`)
     song.classList.remove("nowPlaying")
+    const previusQueue = document.getElementById("queue")
+    previusQueue.parentElement.removeChild(previusQueue)
+}
+const createQueueFromSong = (songId) => {
+    let queue = []
+    for (const song of player.songs) {
+        queue.push(song.id)
+    }
+    queue = queue.slice(queue.indexOf(songId))
+    return queue
+}
+const createQueueElement = (queue) => {
+    let queueSongs = []
+        for (let song of queue) {
+            queueSongs.push(identifySong(song).title)
+        }
+        return createElement("div", queueSongs)
+}
+const addQueueToDOM = (queue) => {
+    if(document.getElementById("queue")){
+        const previusQueue = document.getElementById("queue")
+        previusQueue.parentElement.removeChild(previusQueue)
+    }
+    const queueElement = createElement("div",[],["queue"], {id: "queue"})
+    const queueList = createQueueElement(queue)
+    queueElement.appendChild(queueList)
+    document.body.appendChild(queueElement)
+}
+const playing = (songId) => {
+    if (document.getElementsByClassName("nowPlaying").length!==0){
+            const previuslyPlayed = document.getElementsByClassName("nowPlaying")
+            previuslyPlayed[0].classList.remove("nowPlaying")
+        }
+        const song = document.getElementById(`${songId}`)
+        song.classList.add("nowPlaying")
+}
+const playNext = (queue) => {
+    if (queue.length>1){
+        playing(queue[1])
+    } else {
+        stopPlaying(queue[0])
+    }
 }
 
 
 function playSong(songId) {
-    if (document.getElementsByClassName("nowPlaying").length!==0){
-        const previuslyPlayed = document.getElementsByClassName("nowPlaying")
-        previuslyPlayed[0].classList.remove("nowPlaying")
+    let queue = createQueueFromSong(songId)
+    addQueueToDOM(createQueueFromSong(songId))
+    playing(songId)
+    queue.shift()
+    setTimeout(()=>{playNext(createQueueFromSong(songId))}, dentifySong(songId).duration*1000)
+    if (queue.length>=1){
+        setTimeout(()=>{playSong(queue[0])}, dentifySong(songId).duration*1000)
     }
-    const song = document.getElementById(`${songId}`)
-    song.classList.add("nowPlaying")
-    setTimeout(()=>{stopPlaying(song.id)}, identifySong(songId).duration*1000)
-    return song
 }
     
 /**
@@ -66,7 +108,7 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
 function createPlaylistElement({ id, name, songs }) {
     const children = [name, `${songs.length} songs`, durationFormat(playlistDuration(songs))]
     const classes = ["playlists"] 
-    const attrs = {id}
+    const attrs = {id: `playlist${id}`}
     return createElement("div", children, classes, attrs)
 }
 

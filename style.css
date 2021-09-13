@@ -48,5 +48,17 @@ body{
     border-width: 8px;
     border-color: rgb(28, 156, 45);
     border-radius: 10px;
-    
+}
+.queue{
+    position: fixed;
+    right: 50px;
+    bottom: 70px;
+    background-color: gray;
+    border-width: 8px;
+    border-color: rgb(28, 156, 45);
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: 250px;
 }
