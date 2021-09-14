@@ -55,12 +55,17 @@ function playSong(songId) {
  */
 function removeSong(songId) {
     
-    const inderOfSong = player.songs.indexOf(identifySong(parseInt(songId))) //removes songs from player object
-    if (inderOfSong !== -1){
-        player.songs.splice(inderOfSong, 1)
-        console.log(player.songs)
+    const indexOfSong = player.songs.indexOf(identifySong(parseInt(songId))) //removes songs from player object
+    if (indexOfSong !== -1){
+        player.songs.splice(indexOfSong, 1)
     }
-    const previusQueue = document.getElementById(songId)
+    for (const playlist of player.playlists) {                               //removes the song from every playlist that it's in
+        const indexOfSongInPlaylist = playlist.songs.indexOf(parseInt(songId))
+        if (indexOfSongInPlaylist !== -1){
+            playlist.songs.splice(indexOfSongInPlaylist, 1)
+        }
+    }
+    const previusQueue = document.getElementById(songId)                     //removes the song from the DOM
     previusQueue.parentElement.removeChild(previusQueue)
 }
 
