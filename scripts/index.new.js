@@ -1,6 +1,7 @@
 //          ---------- SUBFUNCTIONS ----------          //
-const identifySong = (id) => {                                  //identify a song in the player and returns all the information about it
+const identifySong = (id=0) => {                                  //identify a song in the player and returns all the information about it
     for (let i of player.songs) if (i.id === id) return i
+    return false
 }
 const playlistDuration = (playlisySongs) => {                   //calculates playlist duration
     let time=0
@@ -28,6 +29,9 @@ const createPlayDeleteButtons = () => {
     const buttonDiv = createElement("div", [playButton, deleteButton], ["button-div"])
     return buttonDiv
 }
+const mmssToS = (duration) => {                                 //Subfunction to convert from "mm:ss" string to duration in seconds
+    return parseInt(duration.slice(0,duration.indexOf(":"))*60)+parseInt(duration.slice(duration.indexOf(":")+1))
+  }
 
 
 /**
@@ -37,7 +41,12 @@ const createPlayDeleteButtons = () => {
  * @param {Number} songId - the ID of the song to play
  */
 function playSong(songId) {
-    // Your code here
+    if (document.getElementsByClassName("nowPlaying").length!==0){
+        const previuslyPlayed = document.getElementsByClassName("nowPlaying")
+        previuslyPlayed[0].classList.remove("nowPlaying")
+    }
+    const song = document.getElementById(`${songId}`)
+    song.classList.add("nowPlaying")
 }
 
 /**
@@ -52,8 +61,14 @@ function removeSong(songId) {
 /**
  * Adds a song to the player, and updates the DOM to match.
  */
-function addSong({ title, album, artist, duration, coverArt }) {
-    // Your code here
+function addSong({ id, title, album, artist, duration, coverArt }) {
+    console.log(coverArt)
+    const song = createSongElement({ id, title, album, artist, duration, coverArt })
+    const songsElement = document.getElementById("songs")
+    songsElement.appendChild(song)
+    player.songs.push({ id, title, album, artist, duration, coverArt })
+    // generateSongs()
+
 }
 
 /**
@@ -72,8 +87,20 @@ function handleSongClickEvent(event) {
  * @param {MouseEvent} event - the click event
  */
 function handleAddSongEvent(event) {
-    // Your code here
+    const title = document.querySelector("#inputs > input:nth-child(1)").value
+    const album = document.querySelector("#inputs > input:nth-child(2)").value
+    const artist = document.querySelector("#inputs > input:nth-child(3)").value
+    const durationMMSS = document.querySelector("#inputs > input:nth-child(4)").value
+    const duration = mmssToS(durationMMSS)
+    const coverArt = document.querySelector("#inputs > input:nth-child(5)").value
+    let id = 0
+    while (id === 0/* && !(identifySong(id).id)*/){                         //Gerenrates a random ID based on how many songs there are in the player
+        id = Math.floor(Math.random()*10**(Math.floor(1+player.songs.length/10)))
+    }
+    console.log({id, title, album, artist, duration, coverArt})
+    addSong({id, title, album, artist, duration, coverArt})
 }
+
 
 /**
  * Creates a song DOM element based on a song object.
