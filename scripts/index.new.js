@@ -1,7 +1,6 @@
 //          ---------- SUBFUNCTIONS ----------          //
-const identifySong = (id=0) => {                                  //identify a song in the player and returns all the information about it
+const identifySong = (id) => {                                  //identify a song in the player and returns all the information about it
     for (let i of player.songs) if (i.id === id) return i
-    return false
 }
 const playlistDuration = (playlisySongs) => {                   //calculates playlist duration
     let time=0
@@ -55,7 +54,14 @@ function playSong(songId) {
  * @param {Number} songId - the ID of the song to remove
  */
 function removeSong(songId) {
-    // Your code here
+    
+    const inderOfSong = player.songs.indexOf(identifySong(parseInt(songId))) //removes songs from player object
+    if (inderOfSong !== -1){
+        player.songs.splice(inderOfSong, 1)
+        console.log(player.songs)
+    }
+    const previusQueue = document.getElementById(songId)
+    previusQueue.parentElement.removeChild(previusQueue)
 }
 
 /**
@@ -77,12 +83,10 @@ function addSong({ id, title, album, artist, duration, coverArt }) {
 function handleSongClickEvent(event) {
     const thisButton = event.target.closest("button")
     if (thisButton.classList.contains("play-button")){
-        const thisButtonDoes = event.target.closest("div .song")
-        console.log(`play ${thisButtonDoes.id}`)
+        playSong(event.target.closest("div .song").id)
     }
     if (thisButton.classList.contains("delete-button")){
-        const thisButtonDoes = event.target.closest("div .song")
-        console.log(`delete ${thisButtonDoes.id}`)
+        removeSong(event.target.closest("div .song").id)
     }
         
 }
