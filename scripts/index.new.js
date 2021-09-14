@@ -1,3 +1,35 @@
+//          ---------- SUBFUNCTIONS ----------          //
+const identifySong = (id) => {                                  //identify a song in the player and returns all the information about it
+    for (let i of player.songs) if (i.id === id) return i
+}
+const playlistDuration = (playlisySongs) => {                   //calculates playlist duration
+    let time=0
+    for (let song of playlisySongs){
+      time += identifySong(song).duration
+    }
+    return time
+}
+const durationFormat = (duration) => {                          //convert from duration in seconds to "mm:ss" string
+    let min = ""
+    if (Math.floor(duration/60)>=10) min = `${Math.floor(duration/60)}`
+    if (Math.floor(duration/60)>=1 && Math.floor(duration/60)<10) min = `0${Math.floor(duration/60)}`
+    if (Math.floor(duration/60)==0) min = "00"
+    let sec = ""
+    if ((duration%60)>=10) sec = `${duration%60}`
+    if ((duration%60)>=1 && (duration%60)<10) sec = `0${duration%60}`
+    if ((duration%60)==0) sec = `00`
+    return min+":"+sec
+}
+const createPlayDeleteButtons = () => {
+    const playButton = createElement("button", [], ["play-button"])
+    playButton.textContent = "▶"
+    const deleteButton = createElement("button", [], ["delete-button"])
+    deleteButton.textContent = "💥"
+    const buttonDiv = createElement("div", [playButton, deleteButton], ["button-div"])
+    return buttonDiv
+}
+
+
 /**
  * Plays a song from the player.
  * Playing a song means changing the visual indication of the currently playing song.
@@ -47,9 +79,11 @@ function handleAddSongEvent(event) {
  * Creates a song DOM element based on a song object.
  */
 function createSongElement({ id, title, album, artist, duration, coverArt }) {
-    const children = []
-    const classes = []
-    const attrs = {}
+    const buttonDiv = createPlayDeleteButtons()
+    const imgEl = createElement("img", [] ,["album-art"], {src: coverArt});
+    const children = [title, album, artist,durationFormat(duration), imgEl, buttonDiv]
+    const classes = ["song"]
+    const attrs = {id}
     const eventListeners = {}
     return createElement("div", children, classes, attrs, eventListeners)
 }
@@ -58,9 +92,10 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
  * Creates a playlist DOM element based on a playlist object.
  */
 function createPlaylistElement({ id, name, songs }) {
-    const children = []
-    const classes = []
-    const attrs = {}
+    const buttonDiv = createPlayDeleteButtons()
+    const children = [name, `${songs.length} songs`, durationFormat(playlistDuration(songs)), buttonDiv]
+    const classes = ["playlist"] 
+    const attrs = {id: `playlist${id}`}
     const eventListeners = {}
     return createElement("div", children, classes, attrs, eventListeners)
 }
@@ -79,21 +114,48 @@ function createPlaylistElement({ id, name, songs }) {
  * @param {Object} eventListeners - the event listeners on the element
  */
 function createElement(tagName, children = [], classes = [], attributes = {}, eventListeners = {}) {
-    // Your code here
+    let newElement = document.createElement(tagName)
+    for (let child of children){
+        if (typeof child === "string"){
+            const childtext = child
+            child = document.createElement(tagName)
+            child.textContent = `${childtext}`
+  
+        }
+        newElement.appendChild(child)
+    }
+    for (let c of classes){
+        newElement.classList.add(`${c}`)
+    }
+    for (let [att, value] of Object.entries(attributes)){
+        newElement.setAttribute(`${att}`, `${value}`)
+    }
+    for (let [event, func] of Object.entries(eventListeners)){
+        newElement.addEventListener(`${event}`, func)
+    }
+    return newElement
 }
 
 /**
  * Inserts all songs in the player as DOM elements into the songs list.
  */
 function generateSongs() {
-    // Your code here
+    for (let s of player.songs){
+        const songsElement = document.getElementById("songs")
+        const song = createSongElement(s)
+        songsElement.appendChild(song)
+    }
 }
 
 /**
  * Inserts all playlists in the player as DOM elements into the playlists list.
  */
 function generatePlaylists() {
-    // Your code here
+    for (let pl of player.playlists){
+        const playlistElement = document.getElementById("playlists")
+        const playlist = createPlaylistElement(pl)
+        playlistElement.appendChild(playlist)
+    }
 }
 
 // Creating the page structure
@@ -102,3 +164,5 @@ generatePlaylists()
 
 // Making the add-song-button actually do something
 document.getElementById("add-button").addEventListener("click", handleAddSongEvent)
+
+
