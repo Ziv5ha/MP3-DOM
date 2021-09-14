@@ -22,9 +22,9 @@ const durationFormat = (duration) => {                          //convert from d
     return min+":"+sec
 }
 const createPlayDeleteButtons = () => {
-    const playButton = createElement("button", [], ["play-button"])
+    const playButton = createElement("button", [], ["play-button"], {}, {click: handleSongClickEvent })
     playButton.textContent = "▶"
-    const deleteButton = createElement("button", [], ["delete-button"])
+    const deleteButton = createElement("button", [], ["delete-button"], {}, {click: handleSongClickEvent })
     deleteButton.textContent = "💥"
     const buttonDiv = createElement("div", [playButton, deleteButton], ["button-div"])
     return buttonDiv
@@ -62,13 +62,10 @@ function removeSong(songId) {
  * Adds a song to the player, and updates the DOM to match.
  */
 function addSong({ id, title, album, artist, duration, coverArt }) {
-    console.log(coverArt)
     const song = createSongElement({ id, title, album, artist, duration, coverArt })
     const songsElement = document.getElementById("songs")
-    songsElement.appendChild(song)
     player.songs.push({ id, title, album, artist, duration, coverArt })
-    // generateSongs()
-
+    songsElement.appendChild(song)
 }
 
 /**
@@ -78,7 +75,16 @@ function addSong({ id, title, album, artist, duration, coverArt }) {
  * @param {MouseEvent} event - the click event
  */
 function handleSongClickEvent(event) {
-    // Your code here
+    const thisButton = event.target.closest("button")
+    if (thisButton.classList.contains("play-button")){
+        const thisButtonDoes = event.target.closest("div .song")
+        console.log(`play ${thisButtonDoes.id}`)
+    }
+    if (thisButton.classList.contains("delete-button")){
+        const thisButtonDoes = event.target.closest("div .song")
+        console.log(`delete ${thisButtonDoes.id}`)
+    }
+        
 }
 
 /**
@@ -97,7 +103,6 @@ function handleAddSongEvent(event) {
     while (id === 0/* && !(identifySong(id).id)*/){                         //Gerenrates a random ID based on how many songs there are in the player
         id = Math.floor(Math.random()*10**(Math.floor(1+player.songs.length/10)))
     }
-    console.log({id, title, album, artist, duration, coverArt})
     addSong({id, title, album, artist, duration, coverArt})
 }
 
@@ -191,5 +196,3 @@ generatePlaylists()
 
 // Making the add-song-button actually do something
 document.getElementById("add-button").addEventListener("click", handleAddSongEvent)
-
-
