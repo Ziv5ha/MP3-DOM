@@ -30,7 +30,10 @@ const createPlayDeleteButtons = () => {
 }
 const mmssToS = (duration) => {                                 //Subfunction to convert from "mm:ss" string to duration in seconds
     return parseInt(duration.slice(0,duration.indexOf(":"))*60)+parseInt(duration.slice(duration.indexOf(":")+1))
-  }
+}
+const sortByTitle = (a,b) => {                                  //Subfunction to sort the search results by title
+    if ( a.title < b.title )return -1;
+}
 
 
 /**
@@ -65,8 +68,8 @@ function removeSong(songId) {
             playlist.songs.splice(indexOfSongInPlaylist, 1)
         }
     }
-    const previusQueue = document.getElementById(songId)                     //removes the song from the DOM
-    previusQueue.parentElement.removeChild(previusQueue)
+    const songToRemove = document.getElementById(songId)                     //removes the song from the DOM
+    songToRemove.parentElement.removeChild(songToRemove)
 }
 
 /**
@@ -200,6 +203,7 @@ function generatePlaylists() {
 }
 
 // Creating the page structure
+player.songs.sort(sortByTitle)
 generateSongs()
 generatePlaylists()
 

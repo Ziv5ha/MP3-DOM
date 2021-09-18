@@ -145,6 +145,7 @@ function createElement(tagName, children = [], classes = [], attributes = {}) {
 }
 
 // You can write more code below this line
+player.songs.sort(sortByTitle)
 for (let s of player.songs){
     const songsElement = document.getElementById("songs")
     const song = createSongElement(s)
