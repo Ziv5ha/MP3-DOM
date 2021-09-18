@@ -34,6 +34,12 @@ const mmssToS = (duration) => {                                 //Subfunction to
 const sortByTitle = (a,b) => {                                  //Subfunction to sort the search results by title
     if ( a.title < b.title )return -1;
 }
+const removePlaylistsFromDom = () => {
+    const playlistsElems = document.querySelectorAll(".playlist")
+    for (const playlistElem of playlistsElems){
+        playlistElem.parentElement.removeChild(playlistElem)
+    }
+}
 
 
 /**
@@ -68,6 +74,8 @@ function removeSong(songId) {
             playlist.songs.splice(indexOfSongInPlaylist, 1)
         }
     }
+    removePlaylistsFromDom()
+    generatePlaylists()
     const songToRemove = document.getElementById(songId)                     //removes the song from the DOM
     songToRemove.parentElement.removeChild(songToRemove)
 }
@@ -196,9 +204,11 @@ function generateSongs() {
  */
 function generatePlaylists() {
     for (let pl of player.playlists){
-        const playlistElement = document.getElementById("playlists")
-        const playlist = createPlaylistElement(pl)
-        playlistElement.appendChild(playlist)
+        if (pl.songs.length !== 0){
+            const playlistElement = document.getElementById("playlists")
+            const playlist = createPlaylistElement(pl)
+            playlistElement.appendChild(playlist)
+        }
     }
 }
 
